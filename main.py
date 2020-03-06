@@ -16,25 +16,20 @@
 ### Imports
 from utilisateur import Utilisateur
 from actions import *
+from manager import *
 
 
 ### Définition de quelques variables
 
-utilisateurCourant = None # Pas d'utilisateur au départ
-
+donnees = {"utilisateurCourant": None} # Pas d'utilisateur au départ
 ### Affichage du menu de départ
 
+menuActuelle = start(donnees) # On charge le menu principal 
+# Tant que l'utilisateur ne souhaite pas quitter l'application, le programme continuer de naviguer de menu en menu
+while menuActuelle != None:
+    # On affiche le menu suivant selon le choix de l'utilisateur
+    menuActuelle = menuActuelle.afficher(donnees)
 
-
-
-### Test de connexion
-pseudo = "Bryan"
-motDePasse = "abcdef"
-typeUtilisateur = "Administrateur"
-tentativeConnexion = connexion(pseudo, motDePasse, typeUtilisateur)
-if tentativeConnexion != None:
-    utilisateurCourant = tentativeConnexion
-    print("Bienvenue %s !" % utilisateurCourant.pseudo)
 
 
 ### Test pour creer un compte

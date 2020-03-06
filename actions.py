@@ -31,7 +31,7 @@ def creerCompte(utilisateurCourant, typeUtilisateur, pseudo, motDePasse):
     else:
         print("Vous n'avez pas les droits pour faire cette action.")
             
-def connexion(pseudo, motDePasse, typeUtilisateur):
+def connexion(pseudo, motDePasse):
     """
         Tentative de connexion.
         Renvoie un objet de type utilisateur si les identifiants sont corrects, None sinon.
@@ -39,11 +39,11 @@ def connexion(pseudo, motDePasse, typeUtilisateur):
     listeUtilisateurs = get_listeUtilisateurs()
     try:  
         utilisateur = listeUtilisateurs[pseudo]
-        if utilisateur.motDePasse == motDePasse and utilisateur.typeUtilisateur == typeUtilisateur:
+        if utilisateur.motDePasse == motDePasse:
             print("Connexion réussie !")
             return utilisateur
     except:
-        print("Aucun compte %s ne possède ces identifiants." % typeUtilisateur)
+        print("Aucun utilisateur ne possède ces identifiants.")
     return None
 
 def supprimerCompte(utilisateurCourant, pseudo):
