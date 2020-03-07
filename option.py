@@ -9,9 +9,10 @@ from actions import *
 
 class Option():
     
-    def __init__(self, libelle, action):
+    def __init__(self, libelle, action, donnees):
         self.libelle = libelle
         self.action = action
+        self.donnees = donnees
     
-    def choix(self, donnees):
-        return self.action(donnees)
+    def choix(self):
+        return self.action(self.donnees)

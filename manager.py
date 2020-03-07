@@ -7,15 +7,14 @@ Created on Fri Mar  6 15:26:59 2020
 Ce module sert à charger toutes les pages et tous les menus
 """
 
-
-
-from menu import Menu
+from menu import *
+from utilisateur import *
+from menuConnexion import *
 from option import Option
-from actions import *
-from utilisateur import Utilisateur
 
 
-def start(donnees):
+
+def start(fenetre, donnees):
     """
         Fonction appelée au démarrage de l'application.
         Elle crée le menu principale et le renvoie
@@ -24,11 +23,11 @@ def start(donnees):
         sortie:
             menuPrincipal : Menu
     """
-    options = [Option("Consultant", pageActions),
-               Option("Professionnel", pageConnexion),
-               Option("Quitter", quitter)]
+    options = [Option("Consultant", pageActions, donnees),
+               Option("Professionnel", pageConnexion, donnees),
+               Option("Quitter", quitter, donnees)]
     
-    menuPrincipal = Menu(options, "Quel est votre statut ?", donnees)
+    menuPrincipal = MenuFenetre(fenetre, options, "Quel est votre statut ?", donnees)
     
     return menuPrincipal
     
@@ -43,6 +42,7 @@ def pageActions(donnees):
         sortie:
             menuActions : Menu
     """
+    fenetre = donnees["fenetre"]
     # Si l'utilisateur ne s'est pas connecté, il est Consultant
     utilisateur = donnees["utilisateurCourant"]
     if utilisateur == None:
@@ -51,72 +51,37 @@ def pageActions(donnees):
     listeActions = [] 
     
     if utilisateur.droits[0]:
-        listeActions.append(Option("Consulter un pays", pageRecherchePays))
+        listeActions.append(Option("Consulter un pays", pageRecherchePays, donnees))
     if utilisateur.droits[1]:
-        listeActions.append(Option("Proposer une correction", pageProposerCorrection))
+        listeActions.append(Option("Proposer une correction", pageProposerCorrection, donnees))
     if utilisateur.droits[2]:
-        listeActions.append(Option("Voir les corrections proposées", pageVoirCorrections))
+        listeActions.append(Option("Voir les corrections proposées", pageVoirCorrections, donnees))
     if utilisateur.droits[3]:
-        listeActions.append(Option("Edition de pays", pageEditionPays))
+        listeActions.append(Option("Edition de pays", pageEditionPays, donnees))
     if utilisateur.droits[6]:
-        listeActions.append(Option("Ajouter un compte", pageCreerCompte))
-        listeActions.append(Option("Supprimer un compte", pageSupprimerCompte))
+        listeActions.append(Option("Ajouter un compte", pageCreerCompte, donnees))
+        listeActions.append(Option("Supprimer un compte", pageSupprimerCompte, donnees))
     if utilisateur.droits[7]:
-        listeActions.append(Option("Résumé d'informations", pageResumeInformations))
+        listeActions.append(Option("Résumé d'informations", pageResumeInformations, donnees))
     if utilisateur.droits[5]:
-        listeActions.append(Option("Déconnexion", pageDeconnexion))
-    listeActions.append(Option("Quitter", quitter))
+        listeActions.append(Option("Déconnexion", pageDeconnexion, donnees))
+    listeActions.append(Option("Quitter", quitter, donnees))
     
-    menuActions = Menu(listeActions, "Que souhaitez-vous faire ?", donnees)
+    menuActions = MenuFenetre(fenetre, listeActions, "Que souhaitez-vous faire ?", donnees)
     
     return menuActions
-    
         
-    
-    
 def pageConnexion(donnees):
-    """
-        Cette fonction sert de page de connexion à l'utilisateur.
-        Elle vérifie que ses identifiants sont corrects et le laisse
-        accéder au menu d'actions si c'est le cas.
-        parametres:
-            donnees : dict
-        sortie:
-            menuActions : Menu
-            ou
-            menuPrincipal : Menu
-    """
-    termine = False
-    while not termine:
     
-        print("Veuillez entrer votre pseudo : \n")
-        pseudo = input(">")
+    menuConnexion = MenuConnexion(donnees)
+    
+    return menuConnexion
         
-        print("Veuillez entrer votre mot de passe : \n")
-        motDePasse = input(">")
         
-        utilisateur = connexion(pseudo, motDePasse)
-        if utilisateur != None:
-            donnees["utilisateurCourant"] = utilisateur
-            menuActions = pageActions(donnees)
-            return menuActions
-        else:
-            reponseCorrecte = False
-            while not reponseCorrecte:
-                reponseCorrecte = True
-                print("Voulez-vous réessayer ? (O/N)")
-                reponse = input(">")
-                
-                if reponse != "O" and reponse != "N":
-                    print("Vous devez répondre O pour Oui ou N pour Non")
-                    reponseCorrecte = False
-                elif reponse == "N":
-                    termine = True
-    menuPrincipal = start(donnees)
-    return menuPrincipal
                     
 def quitter(donnees):
     print("A bientôt !")
+    donnees["fenetre"].destroy()
     return None
 
 def pageRecherchePays(donnees):

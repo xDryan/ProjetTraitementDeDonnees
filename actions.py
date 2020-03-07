@@ -11,9 +11,7 @@
  @author: id1573
  
 *************************************************************************** """
-from utilisateur import Utilisateur
-from utilisateur import get_listeUtilisateurs
-from utilisateur import get_dictUtilisateurs
+from utilisateur import *
 import json
 
 
