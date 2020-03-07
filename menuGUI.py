@@ -59,8 +59,8 @@ class FenetreConnexion(Frame):
         """
         idEntre = self.champId.get()
         mdpEntre = self.champMdp.get()
-        if isinstance(connexion(idEntre, mdpEntre), Utilisateur):
-            return self.afficher_fenetre_menu()
+        if isinstance(connexion(idEntre, mdpEntre)):
+            return afficher_fenetre_menu()
         else:
             fenetreErreur = Tk()
             Label(fenetreErreur, text="Identifiant ou mot de passe invalide").pack()
@@ -90,7 +90,16 @@ class MenuPrincipal(Toplevel):
         self.titreFrame.pack()
 
         # widgets relatifs aux options selon les types d'utilisateurs
-        if connexion(self.champId.get(), self.champMdp.get()).typeUtilisateur == "Administrateur":
+        if connexion(self.champId.get(), self.champMdp.get()) == None:
+            self.boutonAfficherPays = Button(self, text="Afficher pays", command=self.afficher_pays)
+            self.boutonAfficherPays.pack()
+            self.boutonPropositionCorrection = Button(self, text="Proposer une correction",
+                                                      command=self.proposer_correction)
+            self.boutonPropositionCorrection.pack()
+            self.boutonQuitter = Button(self, text="Quitter", command=self.quit)
+            self.boutonQuitter.pack()
+
+        elif connexion(self.champId.get(), self.champMdp.get()).typeUtilisateur == "Administrateur":
             # bouton des options
             self.boutonAfficherPays = Button(self, text="Afficher pays", command=self.afficher_pays)
             self.boutonAfficherPays.pack()
@@ -162,19 +171,13 @@ class MenuPrincipal(Toplevel):
             self.boutonDeconnexion = Button(self, text="Deconnexion", command=self.deconnexion)
             self.boutonDeconnexion.pack()
 
-        else:
-            self.boutonAfficherPays = Button(self, text="Afficher pays", command=self.afficher_pays)
-            self.boutonAfficherPays.pack()
-            self.boutonPropositionCorrection = Button(self, text="Proposer une correction", command=self.proposer_correction)
-            self.boutonPropositionCorrection.pack()
-            self.boutonQuitter = Button(self, text="Quitter", command=self.quit)
-            self.boutonQuitter.pack()
+
 
     def afficher_pays(self):
         return afficherPays(self.donnees)
 
     def proposer_correction(self):
-        return propostitionCorrection(self.donnees)
+        return propositionCorrection(self.donnees)
 
     def corriger_information(self):
         return correctionInfos(self.donnees)
